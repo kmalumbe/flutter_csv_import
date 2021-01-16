@@ -8,6 +8,8 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
 
+import 'Controller.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -15,13 +17,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ///Set status bar and system navigation bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.blueAccent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.white,
-    ));
-
     return GetMaterialApp(
       title: 'Flutter CSV import',
       theme: ThemeData(
@@ -44,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<CSV> csvFiles = [];
   List<CSV> selectedFiles = [];
+  final Controller controller = Get.put(Controller());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.white,
                           ),
                           inactiveIcon: null,
-                        );}
+                        );
+                      }
                   ),
                 ),
                 Row(
@@ -120,17 +117,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     ),
-                    if(selectedFiles.isNotEmpty) SizedBox(width: 40,),
-                    if(selectedFiles.isNotEmpty)FlatButton.icon(
-                      color: Colors.blue,
-                      onPressed: () async {
-
-                      },
-                      icon: Icon(Icons.add,color: Colors.white,),
-                      height: 50,
-                      label: Text('Import into database',style: TextStyle(color: Colors.white),),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    if(selectedFiles.length==1) SizedBox(width: 40,),
+                    if(selectedFiles.length==1)
+                      Obx(()=>FlatButton.icon(
+                        color: Colors.blue,
+                        onPressed: () async {
+                          await controller.uploadFile(
+                              file: selectedFiles.first.csv,
+                              id: selectedFiles.first.csv.path,
+                          );
+                        },
+                        icon: controller.loading.value ? CircularProgressIndicator(backgroundColor: Colors.white,) :Icon(Icons.add,color: Colors.white,),
+                        height: 50,
+                        label: Text('Import into database',style: TextStyle(color: Colors.white),),
+                        shape:
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      ),
                     ),
                   ],
                 ),

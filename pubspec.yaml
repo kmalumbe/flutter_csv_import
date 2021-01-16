@@ -19,6 +19,7 @@ dependencies:
   path_provider: ^1.6.27
   getwidget: ^1.2.4
   get: ^3.24.0
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:
