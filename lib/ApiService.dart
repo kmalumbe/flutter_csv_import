@@ -7,9 +7,12 @@ import 'package:async/async.dart';
 
 class Api{
 
-  Future uploadCsvFile({@required File file, @required String id})async{
-    String _uri = "http://34.123.83.77/logistixpro/csv_import.php";
+  Future<String> uploadCsvFile({@required File file, @required String id})async{
+    // String ROOT = "https://legal-manager-test.000webhostapp.com";
+    String ROOT = "http://34.123.83.77/logistixpro";
+    String _uri = "$ROOT/csv_import.php";
     print('Uploading file...');
+    String result;
     var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
     var length = await file.length();
     final url = Uri.parse(_uri);
@@ -22,12 +25,11 @@ class Api{
     request.files.add(multiPartFile);
     var response = await request.send();
     if(response.statusCode==200){
-      print('File uploaded');
-      response.stream.transform(utf8.decoder).listen((event) {
-        print(event);
-      });
+     result = await response.stream.transform(utf8.decoder).join();
+     print('$result');
+      return result;
     }else{
-      print('File upload failed');
+      print('error');
     }
   }
 

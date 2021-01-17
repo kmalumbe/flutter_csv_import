@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
-
 import 'Controller.dart';
 
 void main() {
@@ -50,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 20),
@@ -113,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       icon: Icon(Icons.add,color: Colors.white,),
                       height: 50,
+
                       label: Text('Add CSV file',style: TextStyle(color: Colors.white),),
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -122,10 +120,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       Obx(()=>FlatButton.icon(
                         color: Colors.blue,
                         onPressed: () async {
-                          await controller.uploadFile(
+                          String result = await controller.uploadFile(
                               file: selectedFiles.first.csv,
                               id: selectedFiles.first.csv.path,
                           );
+                          if(result!=null)
+                            Get.snackbar(result.toUpperCase(), '',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.grey.withOpacity(0.4),
+                                margin: EdgeInsets.symmetric(vertical: 20),
+                              // padding: EdgeInsets.symmetric(horizontal: 20),
+                              // titleText: Text(result.toUpperCase()),
+                            );
                         },
                         icon: controller.loading.value ? CircularProgressIndicator(backgroundColor: Colors.white,) :Icon(Icons.add,color: Colors.white,),
                         height: 50,
@@ -136,7 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
