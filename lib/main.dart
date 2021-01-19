@@ -5,13 +5,18 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:grizzly_io/io_loader.dart';
 import 'BatchModel.dart';
 import 'Controller.dart';
-import 'package:grizzly_io/grizzly_io.dart';
+import 'package:window_size/window_size.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  //Set max window size
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('CSV import');
+    setWindowMinSize(const Size(700, 500));
+    setWindowMaxSize(Size.infinite);
+  }
   runApp(MyApp());
 }
 
@@ -232,102 +237,104 @@ class _MyHomePageState extends State<MyHomePage> {
             )
                 // : allBatchesList.isEmpty
                 // ? Text('No records to display.')
-                :PaginatedDataTable(
-                headingRowHeight: 30,
-                columnSpacing: 30,
-                sortAscending: _sort,
-                sortColumnIndex: _columnIndex,
-                columns: [
-                  DataColumn(
+                :SingleChildScrollView(
+                  child: PaginatedDataTable(
+                  headingRowHeight: 30,
+                  columnSpacing: 30,
+                  sortAscending: _sort,
+                  sortColumnIndex: _columnIndex,
+                  columns: [
+                    DataColumn(
+                        label: Text(
+                          'Batch ID',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onSort: (columnIndex, ascending) {
+                          setState(() {
+                            _columnIndex = 0;
+                            _sort = !_sort;
+                          });
+                          onSortColumn(columnIndex, ascending);
+                        }),
+                    DataColumn(
+                        label: Text('Item Id'),
+                        onSort: (columnIndex, ascending) {
+                          setState(() {
+                            _columnIndex = 1;
+                            _sort = !_sort;
+                          });
+                          onSortColumn(columnIndex, ascending);
+                        }),
+                    DataColumn(
+                        label: Text('Batch Number'),
+                        onSort: (columnIndex, ascending) {
+                          setState(() {
+                            _columnIndex = 2;
+                            _sort = !_sort;
+                          });
+                          onSortColumn(columnIndex, ascending);
+                        }),
+                    DataColumn(
+                        label: Text('Expiry date'),
+                        onSort: (columnIndex, ascending) {
+                          setState(() {
+                            _columnIndex = 3;
+                            _sort = !_sort;
+                          });
+                          onSortColumn(columnIndex, ascending);
+                        }),
+                    DataColumn(
+                      label: Text('Quantity received'),
+                    ),
+                    DataColumn(
                       label: Text(
-                        'Batch ID',
+                        'Balance',
                         overflow: TextOverflow.ellipsis,
                       ),
-                      onSort: (columnIndex, ascending) {
-                        setState(() {
-                          _columnIndex = 0;
-                          _sort = !_sort;
-                        });
-                        onSortColumn(columnIndex, ascending);
-                      }),
-                  DataColumn(
-                      label: Text('Item Id'),
-                      onSort: (columnIndex, ascending) {
-                        setState(() {
-                          _columnIndex = 1;
-                          _sort = !_sort;
-                        });
-                        onSortColumn(columnIndex, ascending);
-                      }),
-                  DataColumn(
-                      label: Text('Batch Number'),
-                      onSort: (columnIndex, ascending) {
-                        setState(() {
-                          _columnIndex = 2;
-                          _sort = !_sort;
-                        });
-                        onSortColumn(columnIndex, ascending);
-                      }),
-                  DataColumn(
-                      label: Text('Expiry date'),
-                      onSort: (columnIndex, ascending) {
-                        setState(() {
-                          _columnIndex = 3;
-                          _sort = !_sort;
-                        });
-                        onSortColumn(columnIndex, ascending);
-                      }),
-                  DataColumn(
-                    label: Text('Quantity received'),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Balance',
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  DataColumn(
-                    label: Text('Status'),
-                  ),
-                  DataColumn(
-                    label: Text('Deleted'),
-                  ),
-                  DataColumn(
-                    label: Text('Date Created'),
-                  ),
-                ],
-                header: Text(allBatchesList.isEmpty ?'No records to display. Try to refresh the page' : 'Batches'),
-                source: DTS(
-                  rowsCount: allBatchesList.length,
-                  batchList: allBatchesList,
-                  selectedBatches: selectedBatches,
-                  onSelectRow: (bool selected,
-                      {Batch batch}) {
-                    setState(() {
-                      onSelectedRow(selected, batch: batch);
-                    });
-                  },
-                ),
-                onRowsPerPageChanged: (rows) {
-                  setState(() {
-                    _rowsPerPage = rows;
-                  });
-                  print('ROWS PER PAGE: $rows');
-                },
-                rowsPerPage: _rowsPerPage,
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.refresh),
-                    onPressed: () async {
-                      selectedBatches.clear();
-                      await controller.fetchBatches();
+                    DataColumn(
+                      label: Text('Status'),
+                    ),
+                    DataColumn(
+                      label: Text('Deleted'),
+                    ),
+                    DataColumn(
+                      label: Text('Date Created'),
+                    ),
+                  ],
+                  header: Text(allBatchesList.isEmpty ?'No records to display. Try to refresh the page' : 'Batches'),
+                  source: DTS(
+                    rowsCount: allBatchesList.length,
+                    batchList: allBatchesList,
+                    selectedBatches: selectedBatches,
+                    onSelectRow: (bool selected,
+                        {Batch batch}) {
                       setState(() {
-                        allBatchesList = controller.batchList;
+                        onSelectedRow(selected, batch: batch);
                       });
                     },
-                  )
-                ],
+                  ),
+                  onRowsPerPageChanged: (rows) {
+                    setState(() {
+                      _rowsPerPage = rows;
+                    });
+                    print('ROWS PER PAGE: $rows');
+                  },
+                  rowsPerPage: _rowsPerPage,
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () async {
+                        selectedBatches.clear();
+                        await controller.fetchBatches();
+                        setState(() {
+                          allBatchesList = controller.batchList;
+                        });
+                      },
+                    )
+                  ],
           ),
+                ),
             ),
       ),
     )
