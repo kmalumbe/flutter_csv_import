@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<List<String>> csvPreviewList = [];
   List<Batch> batchList = [];
   List<Batch> selectedBatches = [];
-  List<Batch> allBatchesList = [];
+  // List<Batch> allBatchesList = [];
   bool _showEditBatch = false;
   final Controller controller = Get.put(Controller());
   bool _sort = false;
@@ -101,11 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
           : _showEditBatch = false;
     });
   }
-  @override
-  void initState() {
-    controller.fetchBatches();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   allBatchesList = controller.batchList;
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
                 // : allBatchesList.isEmpty
                 // ? Text('No records to display.')
-                :SingleChildScrollView(
+                : SingleChildScrollView(
                   child: PaginatedDataTable(
                   headingRowHeight: 30,
                   columnSpacing: 30,
@@ -302,10 +302,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       label: Text('Date Created'),
                     ),
                   ],
-                  header: Text(allBatchesList.isEmpty ?'No records to display. Try to refresh the page' : 'Batches'),
+                  header: Text(controller.batchList.isEmpty ?'No records to display. Try to refresh the page' : 'Batches'),
                   source: DTS(
-                    rowsCount: allBatchesList.length,
-                    batchList: allBatchesList,
+                    rowsCount: controller.batchList.length,
+                    batchList: controller.batchList,
                     selectedBatches: selectedBatches,
                     onSelectRow: (bool selected,
                         {Batch batch}) {
@@ -327,9 +327,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () async {
                         selectedBatches.clear();
                         await controller.fetchBatches();
-                        setState(() {
-                          allBatchesList = controller.batchList;
-                        });
                       },
                     )
                   ],

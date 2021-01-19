@@ -6,6 +6,11 @@ import 'package:get/get.dart';
 import 'BatchModel.dart';
 
 class Controller extends GetxController{
+  @override
+  void onInit() async{
+    await fetchBatches();
+    super.onInit();
+  }
   final Api api = Get.put(Api());
   var loading = false.obs;
   List<Batch> batchList = [];
