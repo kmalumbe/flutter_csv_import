@@ -296,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: Text('Date Created'),
                   ),
                 ],
-                header: Text(allBatchesList.isEmpty ?'No records to display' : 'Batches'),
+                header: Text(allBatchesList.isEmpty ?'No records to display. Try to refresh the page' : 'Batches'),
                 source: DTS(
                   rowsCount: allBatchesList.length,
                   batchList: allBatchesList,
