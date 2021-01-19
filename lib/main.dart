@@ -406,7 +406,7 @@ class DTS extends DataTableSource {
           ),
           //Details
           DataCell(Text(batch.deleted == '0'?'false':'true')),
-          DataCell(Text(batch.dateCreated.toString())),
+          DataCell(Text(batch.dateCreated.toString().substring(0,19))),
         ]);
   }
 
