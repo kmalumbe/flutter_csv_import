@@ -218,16 +218,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height - 56,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-            child: Obx(()=> controller.loading.value ? Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Obx(()=> controller.loading.value
+                ? Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 RefreshProgressIndicator(),
-                SizedBox(height: 20,),
+                SizedBox(height: 10,),
                 Text('Loading...'),
               ],
-            ) : PaginatedDataTable(
+            )
+                // : allBatchesList.isEmpty
+                // ? Text('No records to display.')
+                :PaginatedDataTable(
                 headingRowHeight: 30,
                 columnSpacing: 30,
                 sortAscending: _sort,
@@ -291,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: Text('Date Created'),
                   ),
                 ],
-                header: Text('Batches'),
+                header: Text(allBatchesList.isEmpty ?'No records to display' : 'Batches'),
                 source: DTS(
                   rowsCount: allBatchesList.length,
                   batchList: allBatchesList,
