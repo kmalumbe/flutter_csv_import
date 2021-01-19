@@ -99,13 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-  csv:
+  csv_reader:
     dependency: "direct main"
     description:
-      name: csv
+      name: csv_reader
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "1.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -189,6 +189,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  grizzly_io:
+    dependency: "direct main"
+    description:
+      name: grizzly_io
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
   http:
     dependency: "direct main"
     description:
@@ -208,6 +215,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.9.2+2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.1"
   io:
     dependency: transitive
     description:
