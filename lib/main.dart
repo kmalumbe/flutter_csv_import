@@ -101,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
     controller.fetchBatches();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,11 +150,61 @@ class _MyHomePageState extends State<MyHomePage> {
                   ..defaultExtension = 'csv'
                   ..title = 'Select a document';
                 final result = file.getFile();
+                CSV csv = CSV(csv: result,title: result.path,isChecked: true);
                 if (result != null) {
                   setState(() {
-                    csvFiles.add(CSV(csv: result,title: result.path,));
+                    csvFiles.add(csv);
                   });
                 }
+                Get.defaultDialog(
+                  title: 'Import the following records?',
+                  content: GFCheckboxListTile(
+                    value: csv.isChecked,
+                    onChanged: (bool value) {
+                      setState(() {
+                        // csv.isChecked = value;
+                        // csv.isChecked ? selectedFiles.add(csv) : selectedFiles.remove(csv);
+                      });
+                    },
+                    titleText: csv.title,
+                    subtitleText: csv.shortDescription??null,
+                    avatar: GFAvatar(
+                      child: Text('CSV'),
+                    ),
+                    activeBgColor: Colors.blue,
+                    type: GFCheckboxType.circle,
+                    activeIcon: Icon(
+                      Icons.check,
+                      size: 15,
+                      color: Colors.white,
+                    ),
+                    inactiveIcon: null,
+                  ),
+                  textConfirm: 'Import',
+                  textCancel: 'Cancel',
+                  confirmTextColor: Colors.white,
+                  barrierDismissible: false,
+                  onConfirm: ()async{
+                    Get.back();
+                    String result = await controller.uploadFile(
+                      file: csv.csv,
+                      id: csv.csv.path,
+                    );
+                    if(result!=null){
+                      // GFToast(text: result.toUpperCase(),);
+                      Get.snackbar(result.toUpperCase(), '',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.grey.withOpacity(0.4),
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        // padding: EdgeInsets.symmetric(horizontal: 20),
+                        // titleText: Text(result.toUpperCase()),
+                      );
+                    }
+                    controller.fetchBatches();
+                  },
+                  onCancel: ()=>Get.back(),
+
+                );
               },
               icon: Icon(Icons.add,color: Colors.white,),
               height: 50,
@@ -169,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-            child: Obx(()=> controller.loading.value? Column(
+            child: Obx(()=> controller.loading.value ? Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 RefreshProgressIndicator(),
@@ -235,6 +286,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DataColumn(
                     label: Text('Deleted'),
+                  ),
+                  DataColumn(
+                    label: Text('Date Created'),
                   ),
                 ],
                 header: Text('Batches'),
@@ -352,6 +406,7 @@ class DTS extends DataTableSource {
           ),
           //Details
           DataCell(Text(batch.deleted == '0'?'false':'true')),
+          DataCell(Text(batch.dateCreated.toString())),
         ]);
   }
 

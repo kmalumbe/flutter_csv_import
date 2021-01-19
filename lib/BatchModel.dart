@@ -14,6 +14,7 @@ class Batch {
     this.balance,
     this.status,
     this.deleted,
+    this.dateCreated,
   });
 
   final String idbatchNumbers;
@@ -24,6 +25,7 @@ class Batch {
   final String balance;
   final String status;
   final String deleted;
+  final DateTime dateCreated;
 
   factory Batch.fromJson(Map<String, dynamic> json) => Batch(
     idbatchNumbers: json["idbatch_numbers"],
@@ -34,6 +36,7 @@ class Batch {
     balance: json["balance"],
     status: json["status"],
     deleted: json["deleted"],
+    dateCreated: DateTime.parse(json["date_created"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +48,6 @@ class Batch {
     "balance": balance,
     "status": status,
     "deleted": deleted,
+    "date_created": dateCreated.toIso8601String(),
   };
 }
